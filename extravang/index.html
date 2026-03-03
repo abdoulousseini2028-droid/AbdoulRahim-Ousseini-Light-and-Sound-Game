@@ -743,7 +743,9 @@
 
     <script>
         // API Configuration
-        const GEMINI_API_KEY = 'AIzaSyABDQBz-WW27XysMwW3Oo0NEofHliqaKJE';
+        // IMPORTANT: Set GEMINI_API_KEY as an environment variable in Vercel dashboard
+        // On Vercel, create a new environment variable named GEMINI_API_KEY with your Google Gemini API key
+        const GEMINI_API_KEY = process.env.VITE_GEMINI_API_KEY || 'YOUR_API_KEY_HERE';
         const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
         const MAX_DEMOS = 50;
 
@@ -769,8 +771,7 @@
         const demoLimitScreen = document.getElementById('demoLimitScreen');
 
         let currentImageBase64 = null;
-        let demoMode = false;
-        const APP_URL = 'https://abdoulousseini2028-droid.github.io/virtual-water-tool/';
+        const APP_URL = 'https://virtual-water-tool.vercel.app/'; // Replace with your Vercel URL after deployment
 
         // Initialize
         function init() {
@@ -992,51 +993,18 @@
                 
                 // Friendly messages for common errors
                 if (errorMsg.includes('429') || errorMsg.includes('quota')) {
-                    errorMsg = 'API quota exhausted. The demo has reached its usage limit for now. Please try again later.';
-                } else if (errorMsg.includes('401') || errorMsg.includes('permission')) {
-                    errorMsg = 'API authentication failed. Please check your API key configuration.';
-                }
-                
-                // If API fails, offer demo mode
-                if (errorMsg.includes('404') || errorMsg.includes('401') || errorMsg.includes('permission')) {
-                    errorMsg += ' — Using demo mode to show example food analysis. Press "Try Demo Data" below.';
+                    errorMsg = 'API quota exhausted. Please try again later or contact support.';
+                } else if (errorMsg.includes('401') || errorMsg.includes('authentication')) {
+                    errorMsg = 'API authentication failed. Please ensure the API key is configured correctly.';
+                } else if (errorMsg.includes('404')) {
+                    errorMsg = 'API endpoint not found. Please check the configuration.';
                 }
                 
                 showError(errorMsg);
-                showDemoButton();
                 console.error('Analysis error:', error);
             } finally {
                 showLoading(false);
             }
-        }
-
-        function showDemoButton() {
-            const errorDiv = document.getElementById('errorMessage');
-            if (!errorDiv.querySelector('.demo-button')) {
-                const demoBtn = document.createElement('button');
-                demoBtn.className = 'btn-primary demo-button';
-                demoBtn.textContent = '🎯 Try Demo Data';
-                demoBtn.style.marginTop = '1rem';
-                demoBtn.addEventListener('click', loadDemoData);
-                errorDiv.appendChild(demoBtn);
-            }
-        }
-
-        function loadDemoData() {
-            demoMode = true;
-            const demoResult = {
-                foods: [
-                    { name: 'Chicken Breast', quantity: '200g', gallons: 336, origin_note: 'Global average: 336 gal/serving. US production: similar.' },
-                    { name: 'Almonds', quantity: '1 cup (143g)', gallons: 1591, origin_note: 'Global average: 1,591 gal/cup. California almonds: highest in world.' },
-                    { name: 'Apple', quantity: '1 medium', gallons: 125, origin_note: 'Global average: 125 gal per apple. Minimal variation by region.' },
-                    { name: 'Coffee', quantity: '1 cup (240ml)', gallons: 140, origin_note: 'Global average: 140 gal/cup. East Africa: similar; Colombia: 15% lower.' },
-                    { name: 'Beef Steak', quantity: '100g', gallons: 660, origin_note: 'Global average: 1,320 gal/lb. US beef: 1,847 gal/lb due to feed.' },
-                    { name: 'Tomato', quantity: '1 large', gallons: 27, origin_note: 'Global average: 27 gal. Greenhouse vs field varies significantly.' }
-                ],
-                total_gallons: 2879,
-                comparison: 'That\'s equivalent to 41 showers 🚿 or about 8.6 days of drinking water for one person! 💧'
-            };
-            displayResults(demoResult);
         }
 
         function displayResults(result) {
