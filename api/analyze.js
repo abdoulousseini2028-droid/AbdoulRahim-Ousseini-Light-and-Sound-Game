@@ -9,10 +9,17 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed', method: req.method });
   }
 
-  const { imageData } = req.body;
+  // Safely parse body
+  const body = req.body || {};
+  const { imageData } = body;
+
+  if (!imageData) {
+    return res.status(400).json({ error: 'No imageData in request body' });
+  }
+
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {

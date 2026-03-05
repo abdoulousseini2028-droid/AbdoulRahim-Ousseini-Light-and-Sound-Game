@@ -972,7 +972,8 @@
             
             closeCamera();
             showLoading(true);
-            currentImageBase64 = await compressImage(dataUrl, 800, 0.6);
+            // Camera photos are larger - compress more aggressively (600px, 0.5 quality)
+            currentImageBase64 = await compressImage(dataUrl, 600, 0.5);
             
             // Validate compressed image
             if (!currentImageBase64) {
