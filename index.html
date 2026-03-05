@@ -930,6 +930,12 @@
                     video: { facingMode: 'environment' }
                 });
                 cameraVideoModal.srcObject = stream;
+                // Ensure video is fully loaded before allowing capture
+                await new Promise(resolve => {
+                    cameraVideoModal.onloadedmetadata = () => {
+                        cameraVideoModal.play().then(resolve).catch(resolve);
+                    };
+                });
             } catch (err) {
                 showError('Camera access denied. Please allow camera permissions.');
                 cameraModal.classList.remove('active');
@@ -946,13 +952,35 @@
         async function capturePhoto() {
             const canvas = document.getElementById('captureCanvas');
             const ctx = canvas.getContext('2d');
+            
+            // Validate video is ready
+            if (!cameraVideoModal.videoWidth || !cameraVideoModal.videoHeight) {
+                showError('Video not ready. Please wait a moment and try again.');
+                return;
+            }
+            
             canvas.width = cameraVideoModal.videoWidth;
             canvas.height = cameraVideoModal.videoHeight;
             ctx.drawImage(cameraVideoModal, 0, 0);
-            const dataUrl = canvas.toDataURL('image/jpeg');
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Validate data URL
+            if (!dataUrl || !dataUrl.includes(',')) {
+                showError('Failed to capture image. Please try again.');
+                return;
+            }
+            
             closeCamera();
             showLoading(true);
             currentImageBase64 = await compressImage(dataUrl, 800, 0.6);
+            
+            // Validate compressed image
+            if (!currentImageBase64) {
+                showError('Failed to process image. Please try again.');
+                showLoading(false);
+                return;
+            }
+            
             analyzeImage();
         }
 
