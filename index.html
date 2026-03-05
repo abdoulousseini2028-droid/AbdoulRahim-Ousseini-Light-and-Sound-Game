@@ -883,7 +883,16 @@
                     canvas.width = width;
                     canvas.height = height;
                     canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+
+                    // Iteratively reduce quality until base64 is under 2MB
+                    let q = quality;
+                    let b64;
+                    do {
+                        b64 = canvas.toDataURL('image/jpeg', q).split(',')[1];
+                        q -= 0.1;
+                    } while (b64.length > 2 * 1024 * 1024 && q > 0.1);
+
+                    resolve(b64);
                 };
                 img.src = dataUrl;
             });
@@ -900,7 +909,7 @@
             reader.onload = async (e) => {
                 try {
                     const dataUrl = e.target.result;
-                    currentImageBase64 = await compressImage(dataUrl, 1024, 0.75);
+                    currentImageBase64 = await compressImage(dataUrl, 800, 0.6);
                     analyzeImage();
                 } catch (err) {
                     showError('Error processing image file');
@@ -944,7 +953,7 @@
             const dataUrl = canvas.toDataURL('image/jpeg');
             closeCamera();
             showLoading(true);
-            currentImageBase64 = await compressImage(dataUrl, 1024, 0.75);
+            currentImageBase64 = await compressImage(dataUrl, 800, 0.6);
             analyzeImage();
         }
 
