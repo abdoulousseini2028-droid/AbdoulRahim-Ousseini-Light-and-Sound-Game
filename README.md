@@ -45,10 +45,10 @@ Third, I would improve the visual design and add a score or progress tracker on 
 Thanks!!!
 
 ## Video Walkthrough
-
-Add your screen recordings for all the implemented features here:
+Losing:
 [losing screen recording](https://www.loom.com/share/8571a44fa2424031969831bf1a511422)
 
+Winning:
 [winning screen recording](https://www.loom.com/share/77918e1784ed4ce2bd265d10f61669e8)
 
 ## Interview Recording URL Link
