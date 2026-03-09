@@ -12,7 +12,6 @@ The following **required** functionality is complete:
 
 - **MDN Web Docs** (developer.mozilla.org) — for understanding `setTimeout`, `classList` methods, and the Web Audio API
 - **W3Schools** (w3schools.com) — for CSS pseudo-classes and the `alert()` function reference
-- **GitHub Copilot** — used as an AI coding assistant to help debug a few times
 
 ## Challenges Encountered
 
