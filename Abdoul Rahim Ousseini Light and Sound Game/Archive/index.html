@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light and Sound Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Light and Sound Game</h1>
+    
+    <p>
+        Welcome to the Light and Sound Game! This is a classic memory game where you test your ability to remember sequences of lights and sounds. 
+        To play: Click the Start button to begin. Watch and listen carefully as the game shows you a sequence of colors and sounds. 
+        After the sequence plays, repeat it by clicking the colored buttons in the same order. Each round, the sequence gets longer. 
+        Can you remember the sequence and make it through all the levels?
+    </p>
+    
+    <button id="startBtn" onclick="startGame()">Start</button>
+    <button id="stopBtn" class="hidden" onclick="stopGame()">Stop</button>
+    
+    <div id="gameButtonArea">
+        <button id="button1" onmousedown="startTone(1)" onmouseup="stopTone()" onclick="guess(1)"></button>
+        <button id="button2" onmousedown="startTone(2)" onmouseup="stopTone()" onclick="guess(2)"></button>
+        <button id="button3" onmousedown="startTone(3)" onmouseup="stopTone()" onclick="guess(3)"></button>
+        <button id="button4" onmousedown="startTone(4)" onmouseup="stopTone()" onclick="guess(4)"></button>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
